@@ -30,6 +30,15 @@ html, body, .view, .container {
 	height: 75%;
 	width: 50%;
 	margin-left: -26px;
+
+	padding: 4.5em;
+	padding-top: 1em;
+
+	border-top: none;
+	border-bottom: none;
+	border-color: #ccc;
+
+	outline: none;
 }
 
 #home-icon {
