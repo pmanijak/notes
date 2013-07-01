@@ -2,26 +2,55 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', []).
-  controller('AppCtrl', function ($scope, $http) {
+angular.module('notes.controllers', []).
+  controller('MainCtrl', function ($scope, $location, $http) {
 
-    $http({
-      method: 'GET',
-      url: '/api/name'
-    }).
-    success(function (data, status, headers, config) {
-      $scope.name = data.name;
-    }).
-    error(function (data, status, headers, config) {
-      $scope.name = 'Error!'
-    });
+    var isDataDirty = false;
 
-  }).
-  controller('MyCtrl1', function ($scope) {
-    // write Ctrl here
+    var syncNoteData = function () {
+      if (isDataDirty) {
+        isDataDirty = false;
 
-  }).
-  controller('MyCtrl2', function ($scope) {
-    // write Ctrl here
+        var data = {};
+        data.note = $scope.noteData;
 
+        $http.put('/data' + $location.path(), data)
+        .success(function (data, status, headers, config) {
+          console.log(data);
+        }).
+        error(function (data, status, headers, config) {
+          console.log(data);
+        });
+      }
+    };
+
+    var init = function () {
+      $scope.path = $location.path();
+
+      $http({
+        method: 'GET',
+        url: '/data' + $location.path()
+      }).
+      success(function (data, status, headers, config) {
+        if (status === 200) {
+          $scope.noteData = data;
+        }
+        else {
+          $scope.noteData = "";
+        }
+        
+      }).
+      error(function (data, status, headers, config) {
+        console.log(data);
+      });
+
+      $scope.$watch('noteData', function (val, oldval) {
+        isDataDirty = true;
+      }, true);
+
+      var twoSeconds = 2 * 1000;
+      setInterval(syncNoteData, twoSeconds);
+    };
+
+    init();
   });

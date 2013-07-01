@@ -1,30 +1,23 @@
 /* app css stylesheet */
 
-.menu {
-  list-style: none;
-  border-bottom: 0.1em solid black;
-  margin-bottom: 2em;
-  padding: 0 0 0.5em;
+html, body { 
+	margin: 0;
+	padding: 0;
 }
 
-.menu:before {
-  content: "[";
+/* Parents of the .noteArea need to have a height
+ * of 100% if we want to use CSS for setting the
+ * height of .noteArea as a percentage.
+ */
+html, body, .view, .container {
+	height: 100%;
 }
 
-.menu:after {
-  content: "]";
+.view {
+	margin-left: 25%;
 }
 
-.menu > li {
-  display: inline;
-}
-
-.menu > li:before {
-  content: "|";
-  padding-right: 0.3em;
-}
-
-.menu > li:nth-child(1):before {
-  content: "";
-  padding: 0;
+.noteArea {
+	height: 75%;
+	width: 50%;
 }
