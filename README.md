@@ -1,4 +1,4 @@
-inotes
+notes
 =====
 Save plain-text notes to your server as you type. 
 Each note has its own URL.
