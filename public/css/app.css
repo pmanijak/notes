@@ -1,10 +1,4 @@
 /* app css stylesheet */
-h3 {
-	font-family: sans-serif;
-	font-weight: normal;
-	font-size: 10pt;
-}
-
 html, body { 
 	margin: 0;
 	padding: 0;
@@ -20,6 +14,7 @@ html, body, .view, .container {
 
 .view {
 	padding-left: 25%;
+	width: 50%;
 }
 
 .menu {
@@ -33,11 +28,10 @@ html, body, .view, .container {
 
 .noteArea {
 	height: 75%;
-	width: 50%;
-	margin-left: -26px;
+	width: 100%;
 
-	padding: 4.5em;
-	padding-top: 1em;
+	padding: 4em;
+	padding-top: 0;
 
 	border-top: none;
 	border-bottom: none;
@@ -50,6 +44,9 @@ html, body, .view, .container {
 #home-icon {
 	font-size: 1px;
 	margin-left: -150%;
+	margin-left: -26px;
+	margin-top: 0;
+	width: 1px;
 }
 #home-icon a {
 	color: #aaa;
@@ -57,5 +54,21 @@ html, body, .view, .container {
 }
 #home-icon:hover a {
 	color: #333;
+}
+
+h3 {
+	font-family: sans-serif;
+	font-weight: normal;
+	font-size: 10pt;
+	border: solid 1px #ccc;
+	border-top: none;
+	border-bottom: none;
+
+	margin: 0;
+	margin-top: 1.25em;
+
+	padding-bottom: 2.5em;
+	padding-top: 0.5ex;
+	padding-left: 1.25ex;
 }
 
