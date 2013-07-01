@@ -1,4 +1,9 @@
 /* app css stylesheet */
+h3 {
+	font-family: sans-serif;
+	font-weight: normal;
+	font-size: 10pt;
+}
 
 html, body { 
 	margin: 0;
