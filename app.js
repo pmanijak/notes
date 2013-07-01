@@ -84,7 +84,7 @@ app.get('/data/*', function (req, res) {
 // Save the note data to the path specified.
 app.put('/data/*', function (req, res) {
 	var data = req.body.note;
-	
+
 	var handleCallback = function (error) {
 		if (error) {
 			console.log(error);
@@ -105,16 +105,17 @@ app.put('/data/*', function (req, res) {
 		fs.exists(filepath, function (exists) {
 			if (exists) {
 				saveFile(filepath, handleCallback);
-				return;
 			}
-
-			mkdirp(path.dirname(filepath), function (error) {
-				if (error) {
-					handleCallback(error);
-					return;
-				}
-				saveFile(filepath, handleCallback);
-			});
+			else {
+				mkdirp(path.dirname(filepath), function (error) {
+					if (error) {
+						handleCallback(error);
+					}
+					else {
+						saveFile(filepath, handleCallback);
+					}
+				});
+			}
 		});
 	}
 });
