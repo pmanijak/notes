@@ -1,7 +1,7 @@
 	
 	<h3>Notes {{path}}</h3>
 
-	<div style="float: left; padding-right: 1ex">
+	<div class="menu" ng-class="{ hidden: isUsingNoteArea }">
 	<pre id="home-icon">
 
                 <a href="/">x</a>
@@ -21,7 +21,10 @@
 
 	</pre>
 	</div>
-	<textarea class="noteArea" ng-model="noteData">
+	<textarea class="noteArea" 
+		ng-model="noteData"
+		ng-mouseenter="mouseEnterNoteArea()"
+		ng-mouseleave="mouseLeaveNoteArea()">
 
 	</textarea>
 	<div ng-show="isThereUnsavedData || isSaving">...</div>

@@ -5,6 +5,7 @@ angular.module('notes.controllers', []).
 
 		$scope.isThereUnsavedData = false;
 		$scope.isSaving = false;
+		$scope.isUsingNoteArea = false;
 
 		var getNoteDataLocation = function() {
 			return '/data' + $location.path();
@@ -28,6 +29,14 @@ angular.module('notes.controllers', []).
 					$scope.isSaving = false;
 				});
 			}
+		};
+
+		$scope.mouseEnterNoteArea = function() {
+			$scope.isUsingNoteArea = true;
+		};
+
+		$scope.mouseLeaveNoteArea = function() {
+			$scope.isUsingNoteArea = false;
 		};
 
 		var init = function () {
