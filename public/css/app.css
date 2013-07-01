@@ -39,6 +39,7 @@ html, body, .view, .container {
 	border-color: #ccc;
 
 	outline: none;
+	resize: none;
 }
 
 #home-icon {
