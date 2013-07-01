@@ -51,7 +51,7 @@ var getPathTokens = function (params) {
 
 var getFilePath = function (params) {
 	var tokens = getPathTokens(params); 
-	var filepath = path.join(__dirname, 'public', 'data');
+	var filepath = path.join(__dirname, 'data');
 
 	for (var i=0; i < tokens.length; i++) {
 		filepath = path.join(filepath, tokens[i]);
