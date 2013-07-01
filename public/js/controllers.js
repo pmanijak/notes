@@ -48,7 +48,9 @@ angular.module('notes.controllers', []).
 			});
 
 			$scope.$watch('noteData', function (val, oldval) {
-				$scope.isThereUnsavedData = true;
+				if (oldval) {
+					$scope.isThereUnsavedData = true;
+				}
 			}, true);
 
 			var twoSeconds = 2 * 1000;
