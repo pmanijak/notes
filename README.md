@@ -1,4 +1,4 @@
-notes
+inotes
 =====
 Save plain-text notes to your server as you type. 
 Each note has its own URL.
@@ -7,6 +7,7 @@ Each note has its own URL.
 setup
 -----
 	npm install
+	node app.js
 
 philosophy
 ----------
