@@ -1,32 +1,17 @@
-	
+
 	
 
 	<div class="menu" ng-class="{ hidden: isUsingNoteArea }">
-	<pre id="home-icon">
-
-                <a href="/">x</a>
-             <a href="/">XXXxXXX</a>
-          <a href="/">XXXXXXxXXXXXX</a>
-       <a href="/">XXXXXXXXXxXXXXXXXXX</a>
-    <a href="/">XXXXXXXXXXXXxXXXXXXXXXXXX</a>
- <a href="/">XXXXXXXXXXXXXXXxXXXXXXXXXXXXXXX</a>
-  <a href="/">XXXXXXXXXXXXXXxXXXXXXXXXXXXXX</a>
-     <a href="/">XXXXXXXXXXXxXXXXXXXXXXXX</a>
-     <a href="/">XXXXXXXXXXXxXXXXXXXXXXXX</a>
-     <a href="/">XXXXXXXXXXXxXXXXXXXXXXXX</a>
-     <a href="/">XXXXXXXXXXXxXXXXXXXXXXXX</a>
-     <a href="/">XXXXXXXXXXXxXXXXXXXXXXXX</a>
-     <a href="/">XXXXXXXXXXXxXXXXXXXXXXXX</a>
-     <a href="/">XXXXXXXXXXXxXXXXXXXXXXXX</a>
-
-	</pre>
+    <a href="/"><img src="/img/home.png" id="home-icon" width='16' height='16'/></a>
 	</div>
-  <h3>notes <strong>{{path}}</strong></h3>
-  
-	<textarea class="noteArea" 
-		ng-model="noteData"
-		ng-mouseenter="mouseEnterNoteArea()"
-		ng-mouseleave="mouseLeaveNoteArea()">
 
-	</textarea>
-	<div ng-show="isThereUnsavedData || isSaving">...</div>
+  <div class="noteContainer">
+    <h3>notes <strong>{{path}}</strong></h3>
+  	<textarea class="noteArea" 
+  		ng-model="noteData"
+  		ng-mouseenter="mouseEnterNoteArea()"
+  		ng-mouseleave="mouseLeaveNoteArea()">
+
+  	</textarea>
+  	<div ng-show="isThereUnsavedData || isSaving">...</div>
+  </div>

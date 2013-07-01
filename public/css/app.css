@@ -8,67 +8,81 @@ html, body {
  * of 100% if we want to use CSS for setting the
  * height of .noteArea as a percentage.
  */
-html, body, .view, .container {
+html, body, .view, .container, .noteContainer {
 	height: 100%;
+}
+.noteContainer {
+	height: 90%;
 }
 
 .view {
 	padding-left: 25%;
+	padding-right: 25%;
 	width: 50%;
 }
 
 .menu {
-	float: left; 
-	padding-right: 1ex;
+	position: relative;
+	left: 4px;
+	top: 0.95em;
+	width: 32px;
 }
 
 .hidden {
 	visibility: hidden;
 }
 
-.noteArea {
-	height: 75%;
-	width: 100%;
-
-	padding: 4em;
-	padding-top: 0;
-
+.noteContainer {
+	border: solid 1px;
 	border-top: none;
 	border-bottom: none;
 	border-color: #ccc;
 
+	margin-top: 0;
+	padding-top: 1.2em;
+
+	position: relative;
+	top: -1.2em;
+	left: 30px;
+	width: 100%;
+}
+
+.noteArea {
+	height: 90%;
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	padding: 4em;
+	padding-top: 0;
+	margin-right: 0;
+
+	border: none;
 	outline: none;
 	resize: none;
 }
 
 #home-icon {
-	font-size: 1px;
-	margin-left: -150%;
-	margin-left: -26px;
-	margin-top: 0;
-	width: 1px;
+	padding: 0;
+	padding-right: 1ex;
+	opacity: 0.2;
+	border: none;
 }
-#home-icon a {
-	color: #aaa;
-	text-decoration: none;
-}
-#home-icon:hover a {
-	color: #333;
+#home-icon:hover {
+	opacity: 0.7;
 }
 
 h3 {
 	font-family: sans-serif;
 	font-weight: normal;
 	font-size: 10pt;
-	border: solid 1px #ccc;
-	border-top: none;
-	border-bottom: none;
-
+	
 	margin: 0;
-	margin-top: 1.25em;
+	margin-top: -2px;
 
+	padding: 0;
 	padding-bottom: 2.5em;
-	padding-top: 0.5ex;
-	padding-left: 1.25ex;
+	padding-left: 1.75ex;
 }
 
