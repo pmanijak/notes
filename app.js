@@ -4,11 +4,11 @@
  */
 
 var express = require('express'),
-  routes = require('./routes'),
-  http = require('http'),
-  path = require('path'),
-  fs = require('fs'),
-  mkdirp = require('mkdirp');
+	routes = require('./routes'),
+	http = require('http'),
+	path = require('path'),
+	fs = require('fs'),
+	mkdirp = require('mkdirp');
 
 var app = module.exports = express();
 
@@ -128,5 +128,5 @@ app.get('*', routes.index);
  * Start Server
  */
 http.createServer(app).listen(app.get('port'), function () {
-  console.log('Express server listening on port ' + app.get('port'));
+	console.log('Express server listening on port ' + app.get('port'));
 });
