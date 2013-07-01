@@ -14,10 +14,24 @@ html, body, .view, .container {
 }
 
 .view {
-	margin-left: 25%;
+	padding-left: 25%;
 }
 
 .noteArea {
 	height: 75%;
 	width: 50%;
+	margin-left: -26px;
 }
+
+#home-icon {
+	font-size: 1px;
+	margin-left: -150%;
+}
+#home-icon a {
+	color: #aaa;
+	text-decoration: none;
+}
+#home-icon:hover a {
+	color: #333;
+}
+
