@@ -1,6 +1,13 @@
 'use strict';
 
 angular.module('notes.controllers', []).
+	controller('HeadCtrl', function ($scope, $location, $route) {
+		$scope.path = $location.path();
+
+		$scope.$on('$routeChangeStart', function () {
+			$scope.path = $location.path();
+		});
+	}).
 	controller('MainCtrl', function ($scope, $location, $http) {
 
 		$scope.noteList = [];

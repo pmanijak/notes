@@ -1,10 +1,10 @@
 !!!
 html(lang="en", ng-app="notes")
-  head
+  head(ng-controller="HeadCtrl")
     meta(charset='utf8')
     meta(http-equiv="Content-Language", content="en")
     base(href='/')
-    title notes
+    title {{path}} notes
     link(rel='stylesheet', href='/css/app.css')
   body
     block body
