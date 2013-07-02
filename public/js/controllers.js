@@ -3,13 +3,21 @@
 angular.module('notes.controllers', []).
 	controller('MainCtrl', function ($scope, $location, $http) {
 
+		$scope.noteList = [];
 		$scope.isThereUnsavedData = false;
 		$scope.isSaving = false;
 		$scope.isUsingNoteArea = false;
 
+		var path = $scope.path = $location.path();
+		$scope.base = (path === '/') ? '' : path + '/';
+
 		var getNoteDataLocation = function() {
 			return '/data' + $location.path();
-		}
+		};
+
+		var getNoteListLocation = function() {
+			return '/notes-at' + $location.path();
+		};
 
 		var saveNoteData = function () {
 			if ($scope.isThereUnsavedData) {
@@ -40,8 +48,6 @@ angular.module('notes.controllers', []).
 		};
 
 		var init = function () {
-			$scope.path = $location.path();
-
 			$http.get(getNoteDataLocation())
 			.success(function (data, status, headers, config) {
 				if (status === 200) {
@@ -55,6 +61,21 @@ angular.module('notes.controllers', []).
 			error(function (data, status, headers, config) {
 				console.log(data);
 			});
+
+
+			$http.get(getNoteListLocation())
+			.success(function (data, status, headers, config) {
+				if (status === 200) {
+					$scope.noteList = data;
+				}
+				else {
+					$scope.noteList = [];
+				}
+			}).
+			error(function (data, status, headers, config) {
+				console.log(data);
+			});
+
 
 			$scope.$watch('noteData', function (val, oldval) {
 				if (oldval) {

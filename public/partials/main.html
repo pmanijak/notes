@@ -1,17 +1,23 @@
-
-	
-
-	<div class="menu" ng-class="{ hidden: isUsingNoteArea }">
-    <a href="/"><img src="/img/home.png" id="home-icon" width='16' height='16'/></a>
+	<div class="menuContainer">
+		<div class="menu" ng-class="{ hidden: isUsingNoteArea }">
+			<div id="homeItem"><a href="/"><img 
+				id="home-icon" src="/img/home.png" 
+				width='16' height='16'/></a></div>
+			<div ng-repeat="note in noteList" class="menuItem">
+				<a href="{{base}}{{note}}">
+					<div class="menuItemLink">{{note}}</div>
+				</a>
+			</div>
+		</div>
 	</div>
 
-  <div class="noteContainer">
-    <h3>notes <strong>{{path}}</strong></h3>
-  	<textarea class="noteArea" 
-  		ng-model="noteData"
-  		ng-mouseenter="mouseEnterNoteArea()"
-  		ng-mouseleave="mouseLeaveNoteArea()">
+	<div class="noteContainer">
+		<h3>notes <strong>{{path}}</strong></h3>
+		<textarea class="noteArea" 
+			ng-model="noteData"
+			ng-mouseenter="mouseEnterNoteArea()"
+			ng-mouseleave="mouseLeaveNoteArea()">
 
-  	</textarea>
-  	<div ng-show="isThereUnsavedData || isSaving">...</div>
-  </div>
+		</textarea>
+		<div ng-show="isThereUnsavedData || isSaving">...</div>
+	</div>

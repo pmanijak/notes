@@ -37,17 +37,22 @@ app.configure('production', function() {
 	// TODO
 });
 
+var extension = '.txt';
+var rootFilename = 'root';
+
 
 var getPathTokens = function (params) {
 	var path = params[0];
 	var tokens = path.split('/');
 	
 	if (tokens[0] === '') {
-		tokens[0] = 'root';
+		tokens[0] = rootFilename;
 	}
 
 	return tokens;
 };
+
+
 
 var getFilePath = function (params) {
 	var tokens = getPathTokens(params); 
@@ -61,10 +66,63 @@ var getFilePath = function (params) {
 	// can't just type in, say, .htaccess and proceed
 	// to mess with your server. This is not intended 
 	// to lock-in a particular format.
-	filepath = filepath +'.txt';
+	filepath = filepath + extension;
 
 	return filepath;
 };
+
+var getPathsInDirectory = function (dirname, callback) {
+	fs.exists(dirname, function (exists) {
+		if (!exists) {
+			callback([]);
+		}
+		else {
+			fs.readdir(dirname, function (err, files) {
+				if (err) {
+					// Not a big deal.
+					console.log(err);
+					callback([]);
+				}
+				else {
+					callback(files);
+				}
+			});
+		}
+	})
+};
+
+app.get('/notes-at/*', function (req, res) {
+
+	var notes = [];
+	var basename, file;
+
+	var filepath = getFilePath(req.params);
+	var dirname;
+	if (path.basename(filepath, extension) === rootFilename) {
+		// Special case for the root
+		dirname = path.dirname(filepath);
+	}
+	else {
+		dirname = filepath.slice(0, -extension.length);
+	}
+
+	getPathsInDirectory(dirname, function (files) {
+		// Get the names of all the notes (which end with .txt)
+		for (var i=0; i < files.length; i++) {
+			file = files[i];
+			// Directories are skipped.
+			// TODO: Maybe denote something as a directory in some way.
+			if (path.extname(file) === extension) {
+				basename = path.basename(file, extension);
+				if (basename !== rootFilename) {
+					notes.push(basename);
+				} 
+			}
+		}
+
+		res.send(notes);
+	});
+});
 
 app.get('/data/*', function (req, res) {
 
