@@ -8,7 +8,7 @@ angular.module('notes.controllers', []).
 			$scope.path = $location.path();
 		});
 	}).
-	controller('MainCtrl', function ($scope, $location, $http) {
+	controller('MainCtrl', function ($scope, $location, $http, $window) {
 
 		$scope.noteList = [];
 		$scope.isThereUnsavedData = false;
@@ -75,6 +75,9 @@ angular.module('notes.controllers', []).
 			$scope.isUsingNoteArea = false;
 		};
 
+		$scope.urlClicked = function (url) {
+			$window.location.href = url;
+		};
 
 		var init = function () {
 			$http.get(getNoteDataLocation())

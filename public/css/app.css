@@ -74,6 +74,10 @@ body {
 	background-color: #f6f6f6;
 }
 
+.ace_url {
+	color: blue;
+	text-decoration: underline;
+}
 
 .hidden {
 	visibility: hidden;
@@ -116,13 +120,10 @@ body {
 }
 
 /* Hack the Ace styles to hide the scrollbar,
- * and hide the line highlight and inactive cursor. 
+ * and hide the inactive cursor. 
  */
 .ace_scrollbar {
 	display: none;
-}
-.ace_active-line {
-	background-color: inherit !important;
 }
 .ace_hidden-cursors .ace_cursor {
 	border: none !important;
