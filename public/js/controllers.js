@@ -20,7 +20,15 @@ angular.module('notes.controllers', []).
 		};
 
 		var saveNoteData = function () {
+
 			if ($scope.isThereUnsavedData) {
+				if (path !== $location.path()) {
+					// Stop invalid requests that can happen
+					// when we're navigating quickly.
+					$scope.isThereUnsavedData = false;
+					return;
+				}
+
 				$scope.isThereUnsavedData = false;
 				$scope.isSaving = true;
 
