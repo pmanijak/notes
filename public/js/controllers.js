@@ -9,8 +9,21 @@ angular.module('notes.controllers', []).
 		$scope.isUsingNoteArea = false;
 
 		var path = $scope.path = $location.path();
-		$scope.base = (path === '/') ? '' : path + '/';
-
+		// If path already ends in /, don't add another one.
+		if (path[path.length-1] === '/') {
+			if (path === '/') {
+				$scope.base = '';
+				$scope.isAtRoot = true;
+			}
+			else {
+				$scope.base = path;
+				$scope.isAtRoot = false;
+			}
+		}
+		else {
+			$scope.base = path + '/';
+		}
+		
 		var getNoteDataLocation = function() {
 			return '/data' + $location.path();
 		};
@@ -54,6 +67,7 @@ angular.module('notes.controllers', []).
 		$scope.mouseLeaveNoteArea = function() {
 			$scope.isUsingNoteArea = false;
 		};
+
 
 		var init = function () {
 			$http.get(getNoteDataLocation())

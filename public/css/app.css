@@ -41,8 +41,11 @@ html, body, .view, .container, .noteContainer {
 	overflow: hidden;
 }
 
-#homeItem {
+#homeItem, #backItem {
 	text-align: right;
+}
+#backItem {
+	margin-top: 3px;
 }
 
 .menuItem {
@@ -100,13 +103,13 @@ html, body, .view, .container, .noteContainer {
 	resize: none;
 }
 
-#home-icon {
+#home-icon, #back-icon {
 	padding: 0;
 	padding-right: 1ex;
 	opacity: 0.2;
 	border: none;
 }
-#home-icon:hover {
+#home-icon:hover, #back-icon:hover {
 	opacity: 0.7;
 }
 
