@@ -15,6 +15,7 @@ html, body, .view, .container, .noteContainer {
 	height: 90%;
 }
 
+
 .view {
 	padding-right: 25%;
 	width: 50%;
@@ -102,6 +103,20 @@ html, body, .view, .container, .noteContainer {
 	outline: none;
 	resize: none;
 }
+
+/* Hack the Ace styles to hide the scrollbar,
+ * and hide the line highlight and inactive cursor. 
+ */
+.ace_scrollbar {
+	display: none;
+}
+.ace_active-line {
+	background-color: inherit !important;
+}
+.ace_hidden-cursors .ace_cursor {
+	border: none !important;
+}
+
 
 #home-icon, #back-icon {
 	padding: 0;

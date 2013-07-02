@@ -16,11 +16,11 @@
 
 	<div class="noteContainer">
 		<h3>notes <strong>{{path}}</strong></h3>
-		<textarea class="noteArea" 
+		<div class="noteArea" 
+			ace-editor
 			ng-model="noteData"
 			ng-mouseenter="mouseEnterNoteArea()"
 			ng-mouseleave="mouseLeaveNoteArea()">
-
-		</textarea>
+		</div>
 		<div ng-show="isThereUnsavedData || isSaving">...</div>
 	</div>
