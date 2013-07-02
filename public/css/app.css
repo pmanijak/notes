@@ -11,6 +11,12 @@ html, body {
 html, body, .view, .container, .noteContainer {
 	height: 100%;
 }
+body {
+	/* The vertical scrollbar becomes visible otherwise 
+	 * I'm sure this is an artifact of some other setting.
+	 */
+	height: 97%;
+}
 .noteContainer {
 	height: 90%;
 }
@@ -95,13 +101,18 @@ html, body, .view, .container, .noteContainer {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 
-	padding: 4em;
+	padding: 3em;
 	padding-top: 0;
 	margin-right: 0;
 
 	border: none;
 	outline: none;
 	resize: none;
+}
+
+.ace-container {
+	width: 100%;
+	height: 100%;
 }
 
 /* Hack the Ace styles to hide the scrollbar,

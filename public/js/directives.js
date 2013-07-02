@@ -19,6 +19,8 @@ angular.module('notes.directives', []).
       replace: true,
       template: "<div class=\"ace-container\"></div>",
 
+      // TODO: The height of the ace-container doesn't change
+      // when the window is resized. This would be nice to fix.
       link: function($scope, $el, attrs, model) {
         var editor, session, updateViewValue;
         editor = new Editor(new Renderer($el[0], "ace/theme/textmate"));
