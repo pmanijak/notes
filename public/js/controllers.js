@@ -75,9 +75,20 @@ angular.module('notes.controllers', []).
 			$scope.isUsingNoteArea = false;
 		};
 
-		$scope.urlClicked = function (url) {
+		$scope.webUrlClicked = function (url) {
+			// Web urls are probably not on our server
 			$window.location.href = url;
 		};
+
+		$scope.noteUrlClicked = function (url) {
+			// Note urls start with ///, so just chop
+			// them off and navigate.
+			var noteUrlPrefix = "///";
+			if (url.indexOf(noteUrlPrefix) === 0) {
+				var destination = url.slice(noteUrlPrefix.length);
+				$location.path(destination);
+			}
+		}
 
 		var init = function () {
 			$http.get(getNoteDataLocation())

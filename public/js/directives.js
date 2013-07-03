@@ -46,8 +46,13 @@ function ($location) {
 			this.$rules = {
 				"start" : [
 					{
-						token : "url", 
+						token: "url", 
 						regex: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-]*)?\??(?:[\-\+=&;%@\.\w]*)#?(?:[\.\!\/\\\w]*))?)/
+					},
+					{
+						// Note urls start with ///
+						token: "note-url",
+						regex: /\/\/\/[\w.%+\-\/]*/
 					},
 					{
 						caseInsensitive: true
@@ -89,12 +94,34 @@ function ($location) {
 		editor.on("click", function (e) {
 			var position = e.getDocumentPosition();
 			var token = session.getTokenAt(position.row, position.column);
+			var line = session.doc.getLine(position.row);
+
+			// If this is the last column in a row, do not navigate,
+			// because we get in this situation when we click on the
+			// far-right side of a line, even though we are not really
+			// hovering over a url token.
+			//
+			// This has a side effect in that if the right half of the 
+			// last letter is clicked, we will not navigate, when we
+			// should.
+			if (position.column === line.length) {
+				return;
+			}
 			
 			// Tell our controller that someone clicked a url.
 			if (token && token.type === "url") {
-				$scope.urlClicked(token.value);
+				$scope.webUrlClicked(token.value);
+			}
+			if (token && token.type === "note-url") {
+				$scope.noteUrlClicked(token.value);
+				// Not sure if this should be here or in the parent
+				// controller, but if it's not somewhere then 
+				// changes to $location.path won't take effect until
+				// some other event has fired.
+				$scope.$apply();
 			}
 		});
+
 
 
 		model.$render = function() {

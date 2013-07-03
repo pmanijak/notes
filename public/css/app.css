@@ -113,18 +113,17 @@ body {
 	width: 100%;
 	height: 100%;
 }
-.ace_url {
+.ace_url, .ace_note-url {
 	/* Ace uses pointer-events: none, which messes with 
 	 * mouseover stuff unless we change it. 
 	 */
 	pointer-events: auto;
 	cursor: pointer;
 }
-.ace_url:hover {
+.ace_url:hover, .ace_note-url:hover {
 	color: blue;
 	text-decoration: underline;
 }
-
 
 /* Hack the Ace styles to hide the scrollbar,
  * and hide the inactive cursor. 
