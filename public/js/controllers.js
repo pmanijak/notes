@@ -70,8 +70,8 @@ angular.module('notes.controllers', []).
 		$window.onresize = function () {
 			// This is defined in our ace-editor directive.
 			// A hack, yes.
-			if ($scope.resize) {
-				$scope.resize();
+			if ($scope.resizeEditor) {
+				$scope.resizeEditor();
 			}
 		};
 

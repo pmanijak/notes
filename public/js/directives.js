@@ -123,7 +123,7 @@ function () {
 		});
 
 
-		$scope.resize = function () {
+		$scope.resizeEditor = function () {
 			// Tell the Ace editor that it should adjust
 			// its size to fit our new window size.
 			editor.resize();
@@ -140,6 +140,9 @@ function () {
 			});
 		  };
 		};
+
+		// Take the focus / cursor on page load.
+		editor.focus();
 
 		session.on("change", updateViewValue);
 		return $scope.$on("$destroy", function() {
