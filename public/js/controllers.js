@@ -10,6 +10,7 @@ angular.module('notes.controllers', []).
 	}).
 	controller('MainCtrl', function ($scope, $location, $http, $window) {
 
+		$scope.noteData = "";
 		$scope.noteList = [];
 		$scope.isThereUnsavedData = false;
 		$scope.isSaving = false;
