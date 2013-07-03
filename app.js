@@ -94,10 +94,9 @@ var getPathsInDirectory = function (dirname, callback) {
 app.get('/notes-at/*', function (req, res) {
 
 	var notes = [];
-	var basename, file;
+	var basename, file, dirname, isPathValid;
 
 	var filepath = getFilePath(req.params);
-	var dirname;
 	if (path.basename(filepath, extension) === rootFilename) {
 		// Special case for the root
 		dirname = path.dirname(filepath);
@@ -114,9 +113,14 @@ app.get('/notes-at/*', function (req, res) {
 			// TODO: Maybe denote something as a directory in some way.
 			if (path.extname(file) === extension) {
 				basename = path.basename(file, extension);
-				if (basename !== rootFilename) {
-					notes.push(basename);
-				} 
+				isPathValid = (basename !== rootFilename);
+			}
+			else {
+				basename = path.basename(file);
+			}
+
+			if (isPathValid && notes.indexOf(basename) < 0) {
+				notes.push(basename);
 			}
 		}
 
