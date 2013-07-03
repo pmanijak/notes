@@ -9,7 +9,7 @@ directive('appVersion', function (version) {
 	};
 })
 .directive("aceEditor", [
-function ($location) {
+function () {
 
 	// Define a mode for us to use, with some text-highlighting rules
 	// for finding URLs.
@@ -123,6 +123,11 @@ function ($location) {
 		});
 
 
+		$scope.resize = function () {
+			// Tell the Ace editor that it should adjust
+			// its size to fit our new window size.
+			editor.resize();
+		};
 
 		model.$render = function() {
 		  return session.setValue(model.$modelValue);
