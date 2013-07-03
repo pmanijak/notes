@@ -89,10 +89,13 @@ angular.module('notes.controllers', []).
 		};
 
 		$scope.noteUrlClicked = function (url) {
-			// Note urls start with ///, so just chop
+			// Note urls start with /// or ---, so just chop
 			// them off and navigate.
 			var noteUrlPrefix = "///";
-			if (url.indexOf(noteUrlPrefix) === 0) {
+			var altNoteUrlPrefix = "---";
+
+			if (url.indexOf(noteUrlPrefix) === 0
+			|| url.indexOf(altNoteUrlPrefix) === 0) {
 				var destination = url.slice(noteUrlPrefix.length);
 				$location.path(destination);
 			}

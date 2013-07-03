@@ -55,6 +55,16 @@ function () {
 						regex: /\/\/\/[\w.%+\-\/]*/
 					},
 					{
+						// Note urls also start with ---
+						//
+						// The regex disallows "---" by itself; 
+						// this was mainly because I couldn't 
+						// figure out how to do it while
+						// disallowing longer chains like ------.
+						token: "note-url",
+						regex: /\-\-\-[^\- ][\w.%+\-\/]*/
+					},
+					{
 						caseInsensitive: true
 					}
 				]
