@@ -18,7 +18,7 @@ in a few days.
 
 what else?
 -----------
-Link to other notes like /this or ---this.
+Link to other notes like /this.
 Proper URLs are also hyperlinked.
 That's it.
 

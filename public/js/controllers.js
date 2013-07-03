@@ -90,18 +90,13 @@ angular.module('notes.controllers', []).
 		};
 
 		$scope.noteUrlClicked = function (url) {
-			// Note urls start with / or ---, so just chop
-			// them off and navigate.
+			// Note urls start with /, so just chop
+			// off the prefix and navigate.
 			var noteUrlPrefix = "/";
-			var altNoteUrlPrefix = "---";
 			var destination;
 
 			if (url.indexOf(noteUrlPrefix) === 0) {
 				destination = url.slice(noteUrlPrefix.length);
-				$location.path(destination);
-			}
-			if (url.indexOf(altNoteUrlPrefix) === 0) {
-				destination = url.slice(altNoteUrlPrefix.length);
 				$location.path(destination);
 			}
 		}
