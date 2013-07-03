@@ -114,12 +114,11 @@ function () {
 				$scope.webUrlClicked(token.value);
 			}
 			if (token && token.type === "note-url") {
-				$scope.noteUrlClicked(token.value);
-				// Not sure if this should be here or in the parent
+				// Not sure if $apply should be here or in the parent
 				// controller, but if it's not somewhere then 
 				// changes to $location.path won't take effect until
 				// some other event has fired.
-				$scope.$apply();
+				$scope.$apply($scope.noteUrlClicked(token.value));
 			}
 		});
 
