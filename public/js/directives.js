@@ -87,6 +87,7 @@ function () {
 		renderer.setShowPrintMargin(false);
 
 		session = editor.getSession();
+		session.setUseWrapMode(true);
 		session.setMode('ace/mode/notes');
 
 		// The Ace editor prevents the default click actions from occurring, 
