@@ -4,13 +4,14 @@
   "scripts": {
     "start": "app.js"
   },
-  "version": "0.0.1-1",
+  "version": "0.0.1-13",
   "engines": {
     "node": "0.8.x"
   },
   "dependencies": {
     "express": "~3.2.6",
     "jade": "~0.31.2",
-    "mkdirp": "0.3"
+    "mkdirp": "0.3",
+    "ncp": "0.4"
   }
 }

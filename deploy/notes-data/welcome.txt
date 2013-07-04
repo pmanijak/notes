@@ -1,0 +1,12 @@
+/welcome to notes.
+
+To create a note, go to something like this:
+    http://notes.jit.su/projects
+    or http://notes.jit.su/projects/cooking
+ 
+To link to a note, /projects or /someday
+ 
+Notes are public, and anyone can edit them. 
+Notes are saved automatically, as you type.
+
+Source: http://github.com/exclsr/notes

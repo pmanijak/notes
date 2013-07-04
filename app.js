@@ -8,10 +8,10 @@ var express = require('express'),
 	http = require('http'),
 	path = require('path'),
 	fs = require('fs'),
-	mkdirp = require('mkdirp');
+	mkdirp = require('mkdirp'),
+	ncp = require('ncp').ncp;
 
 var app = module.exports = express();
-
 
 /**
  * Configuration
@@ -32,9 +32,26 @@ app.configure('development', function() {
 	app.use(express.errorHandler());
 });
 
+var datadir = path.join(__dirname, 'data');
+
 // production only
-app.configure('production', function() {
-	// TODO
+app.configure('production', function () {
+	// Copy files from ./deploy/notes-data to ./data
+	var initialNotesDataDir = path.join(__dirname, 'deploy', 'notes-data');
+	fs.exists(datadir, function (exists) {
+		// Only do this if there isn't a data dir already.
+		if (!exists) {
+			var options = {
+				clobber: false
+			}
+			ncp(initialNotesDataDir, datadir, options, function (err) {
+				if (err) {
+					console.log("Failure during initial-notes data copy.");
+					console.log(err);
+				}
+			});
+		}
+	});
 });
 
 var extension = '.txt';
@@ -56,7 +73,7 @@ var getPathTokens = function (params) {
 
 var getFilePath = function (params) {
 	var tokens = getPathTokens(params); 
-	var filepath = path.join(__dirname, 'data');
+	var filepath = datadir;
 
 	for (var i=0; i < tokens.length; i++) {
 		filepath = path.join(filepath, tokens[i]);
