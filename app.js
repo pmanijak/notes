@@ -1,8 +1,5 @@
 // A simple server for saving plain text to files,
 // and reading them again, from time to time.
-//
-// author: Phil Manijak
-// created: July 2013
 
 var express = require('express'),
 	routes = require('./routes'),
