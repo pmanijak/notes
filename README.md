@@ -1,7 +1,6 @@
 notes
 =====
 Save plain-text notes to your server as you type. 
-Each note has its own URL.
 
 how?
 -----
@@ -12,18 +11,24 @@ how?
 
 what?
 ----------
-Be something to take notes, without having to install
-any software beyond the server. Make something useful
-in a few days.
+This is something to take notes. It was created for use on 
+desktops and laptops. In other words, it might not work on an iPad. 
+The only requirement is nodejs.
+
 
 what else?
 -----------
-Link to other notes like /this.
-Proper URLs are also hyperlinked.
-That's it.
+* Link to other notes like /this.
+* Proper URLs are also hyperlinked.
+* There is a demo at [http://notes.jit.su](http://notes.jit.su)
+* That's it.
 
 roadmap
 ------------
 * Not much else at this point. 
 * Maybe add some sort of authentication thing.
+* Maybe add some sort of history thing.
 
+license
+------------
+BSD
