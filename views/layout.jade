@@ -4,7 +4,7 @@ html(lang="en", ng-app="notes")
     meta(charset='utf8')
     meta(http-equiv="Content-Language", content="en")
     base(href='/')
-    title {{path}} notes
+    title(ng-bind="path + ' notes'") notes
     link(rel='stylesheet', href='/css/app.css')
   body
     block body
