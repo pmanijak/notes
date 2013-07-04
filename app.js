@@ -42,7 +42,7 @@ app.configure('production', function () {
 		if (!exists) {
 			var options = {
 				clobber: false
-			}
+			};
 			ncp(initialNotesDataDir, datadir, options, function (err) {
 				if (err) {
 					console.log("Failure during initial-notes data copy.");
@@ -54,6 +54,11 @@ app.configure('production', function () {
 });
 
 
+
+var isRootDataFilename = function (filename) {
+	var rootDataFilename = path.join(datadir, rootFilename + extension);
+	return rootDataFilename === filename;
+};
 
 var getPathTokens = function (params) {
 	var path = params[0];
@@ -173,14 +178,68 @@ app.put('/data/*', function (req, res) {
 
 	var saveFile = function (filepath, callback) {
 		fs.writeFile(filepath, data, callback);
-	}
+	};
 
-	if (data) {
+	var deleteFile = function (filepath, callback) {
+		fs.unlink(filepath, function (error) {
+			if (error) {
+				callback(error);
+			}
+			else {
+				// If our directory is empty now, delete that too.
+				var deleteEmptyParentDirs = function (startpath) {
+					var parentDirname = path.dirname(startpath);
+					if (parentDirname === datadir) {
+						// If we get to the data directory, we're done.
+						callback();
+					}
+					else {
+						fs.readdir(parentDirname, function (error, files) {
+							if (error) {
+								console.log("Error reading a directory during delete operation: " + parentDirname);
+								callback(err);
+							}
+							else if (files.length === 0) {
+								fs.rmdir(parentDirname, function (error) {
+									if (error) {
+										callback(error);
+									}
+									else {
+										// recursive.
+										deleteEmptyParentDirs(parentDirname);
+									}
+								});
+							}
+							else {
+								// done.
+								callback();
+							}
+						});
+					}
+				};
+
+				deleteEmptyParentDirs(filepath);
+			}
+		});
+	};
+
+	var isDataEmpty = function (d) {
+		return d === "";
+	};
+
+	// Save or delete the file, depending on 
+	// whether the data we get is empty.
+	if (data || data === "") {
 		var filepath = getFilePath(req.params);
 
 		fs.exists(filepath, function (exists) {
 			if (exists) {
-				saveFile(filepath, handleCallback);
+				if (data === "" && !isRootDataFilename(filepath)) {
+					deleteFile(filepath, handleCallback);
+				}
+				else {
+					saveFile(filepath, handleCallback);
+				}
 			}
 			else {
 				mkdirp(path.dirname(filepath), function (error) {
