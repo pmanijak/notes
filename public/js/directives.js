@@ -129,6 +129,14 @@ function () {
 			editor.resize();
 		};
 
+		// This is so we can move the cursor after some
+		// content is loaded.
+		$scope.initEditor = function () {
+			// Move the cursor to the end of the first line,
+			// because it looks better.
+			editor.navigateLineEnd();
+		};
+
 		model.$render = function() {
 		  return session.setValue(model.$modelValue);
 		};

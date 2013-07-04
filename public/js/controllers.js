@@ -106,6 +106,9 @@ angular.module('notes.controllers', []).
 			.success(function (data, status, headers, config) {
 				if (status === 200) {
 					$scope.noteData = data;
+					// Ensure noteData is updated before calling initEditor
+					$scope.$apply();
+					$scope.initEditor();
 				}
 				else {
 					$scope.noteData = "";
