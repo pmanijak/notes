@@ -1,7 +1,8 @@
-
-/**
- * Module dependencies
- */
+// A simple server for saving plain text to files,
+// and reading them again, from time to time.
+//
+// author: Phil Manijak
+// created: July 2013
 
 var express = require('express'),
 	routes = require('./routes'),
@@ -13,9 +14,9 @@ var express = require('express'),
 
 var app = module.exports = express();
 
-/**
- * Configuration
- */
+var datadir = path.join(__dirname, 'data');
+var extension = '.txt';
+var rootFilename = 'root';
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -31,8 +32,6 @@ app.use(app.router);
 app.configure('development', function() {
 	app.use(express.errorHandler());
 });
-
-var datadir = path.join(__dirname, 'data');
 
 // production only
 app.configure('production', function () {
@@ -54,8 +53,6 @@ app.configure('production', function () {
 	});
 });
 
-var extension = '.txt';
-var rootFilename = 'root';
 
 
 var getPathTokens = function (params) {
