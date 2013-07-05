@@ -7,13 +7,18 @@ var express = require('express'),
 	path = require('path'),
 	fs = require('fs'),
 	mkdirp = require('mkdirp'),
-	ncp = require('ncp').ncp;
+	ncp = require('ncp').ncp,
+	uuid = require('node-uuid');
 
 var app = module.exports = express();
 
 var datadir = path.join(__dirname, 'data');
 var extension = '.txt';
 var rootFilename = 'root';
+// TODO: This creates a well-sealed cookie, but all 
+// cookies become invalid upon server restart. So,
+// is that a big deal? What do you think?
+var cookieSealant = uuid.v4();
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -22,6 +27,7 @@ app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
+app.use(express.cookieParser(cookieSealant));
 app.use(express.methodOverride());
 app.use(app.router);
 
@@ -50,6 +56,86 @@ app.configure('production', function () {
 	});
 });
 
+//-----------------------------------------------------------
+// Auth
+//
+var activeSessionIds = {};
+var cookieSessionKey = 'insecure-nonsense';
+
+var setPermissionsCookie = function (req, res) {
+	var cookieDomain = req.host === "localhost" ? null : req.host;
+	var oneMinute = 60 * 1000;
+	var oneHour = 60 * oneMinute;
+	var oneYear = 365 * 24 * oneHour;
+
+	var sessionId = uuid.v4();
+
+	var cookieOptions = {
+		domain: cookieDomain,
+		maxAge: oneHour,
+		httpOnly: true,
+		signed: true
+	};
+
+	res.cookie(cookieSessionKey, sessionId, cookieOptions);
+};
+
+var isActiveSession = function (sessionId) {
+	// TODO: work in progress
+	return true;
+};
+
+var permissions = function (req, res, next) {
+	req.permissions = {
+		read: true,
+		write: false
+	};
+
+	// If there's no authcode set, everyone can write.
+	if (!config.authcode) {
+		req.permissions.write = true;
+		// TODO: Probably clear active sessions, too, 
+		// but maybe that doesn't matter.
+	}
+	else {
+		var sessionId = req.signedCookies[cookieSessionKey];
+		if (sessionId && isActiveSession(sessionId)) {
+			// TODO: New cookie after the active session has been around for a while.
+			req.permissions.write = true;
+		}
+	}
+
+	next();
+};
+
+
+app.post("/auth", function (req, res) {
+	var data = req.body;
+
+	var isAuthorized = function (authcode) {
+		if (!config || !config.authcode) {
+			return true;
+		}
+
+		return config.authcode === authcode;
+	};
+
+	if (isAuthorized(data.authcode)) {
+		setPermissionsCookie(req, res);
+		res.send(200); // ok. cookie is content.
+	}
+	else {
+		res.send(401);
+	}
+});
+
+app.get("/permissions", permissions, function (req, res) {
+	res.send(req.permissions);
+	res.send(200);
+});
+
+// end Auth
+//-------------------------------------------------------------------
 
 
 var isRootDataFilename = function (filename) {
@@ -160,7 +246,12 @@ app.get('/data/*', function (req, res) {
 
 
 // Save the note data to the path specified.
-app.put('/data/*', function (req, res) {
+app.put('/data/*', permissions, function (req, res) {
+	if (!req.permissions.write) {
+		res.send(401); // unauthorized
+		return;
+	}
+
 	var data = req.body.note;
 
 	var handleCallback = function (error) {
@@ -251,6 +342,7 @@ app.put('/data/*', function (req, res) {
 		});
 	}
 });
+
 
 // The secret to bridging Angular and Express in a 
 // way that allows us to pass any path to the client.
