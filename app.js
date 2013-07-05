@@ -38,8 +38,8 @@ app.configure('development', function() {
 
 // production only
 app.configure('production', function () {
-	// Copy files from ./deploy/notes-data to ./data
-	var initialNotesDataDir = path.join(__dirname, 'deploy', 'notes-data');
+	// Copy files from ./config/notes-data to ./data
+	var initialNotesDataDir = path.join(__dirname, 'config', 'notes-data');
 	fs.exists(datadir, function (exists) {
 		// Only do this if there isn't a data dir already.
 		if (!exists) {
