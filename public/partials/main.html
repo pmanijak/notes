@@ -3,6 +3,12 @@
 			<div id="homeItem"><a href="/"><img 
 				id="home-icon" src="/img/home.png" 
 				width='16' height='16'/></a></div>
+			<div class="authContainer">
+				<form ng-submit="auth()" ng-hide="isAuthorized">
+					<input type="password" name="auth" placeholder="authcode" 
+						ng-model="authcode" on-focus="authFocus()" on-blur="authBlur()"/>
+				</form>
+			</div>
 			<div ng-repeat="note in noteList" class="menuItem">
 				<a href="{{base}}{{note}}">
 					<div class="menuItemLink">{{note}}</div>

@@ -157,3 +157,11 @@ h3 {
 	padding-left: 1.75ex;
 }
 
+.authContainer input {
+	border: solid 1px #ccc;
+	color: #ddd;
+
+	padding-left: 0.5ex;
+	width: 10ex;
+	outline: none;
+}

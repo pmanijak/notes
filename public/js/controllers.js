@@ -16,6 +16,8 @@ angular.module('notes.controllers', []).
 		$scope.isSaving = false;
 		$scope.isUsingNoteArea = false;
 
+		var isMouseOverNoteArea, isUsingAuthArea = false;
+		
 		var path = $scope.path = $location.path();
 		// If path already ends in /, don't add another one.
 		if (path[path.length-1] === '/') {
@@ -77,13 +79,6 @@ angular.module('notes.controllers', []).
 			}
 		};
 
-		$scope.mouseEnterNoteArea = function() {
-			$scope.isUsingNoteArea = true;
-		};
-
-		$scope.mouseLeaveNoteArea = function() {
-			$scope.isUsingNoteArea = false;
-		};
 
 		$scope.webUrlClicked = function (url) {
 			// Web urls are probably not on our server
@@ -100,7 +95,51 @@ angular.module('notes.controllers', []).
 				destination = url.slice(noteUrlPrefix.length);
 				$location.path(destination);
 			}
+		};
+
+
+		var updateIsUsingNoteArea = function () {
+			$scope.isUsingNoteArea = !isUsingAuthArea && isMouseOverNoteArea;
 		}
+
+		$scope.mouseEnterNoteArea = function() {
+			isMouseOverNoteArea = true;
+			updateIsUsingNoteArea();
+		};
+
+		$scope.mouseLeaveNoteArea = function() {
+			isMouseOverNoteArea = false;
+			updateIsUsingNoteArea();
+		};
+
+
+		$scope.auth = function () {
+			var data = {
+				authcode: $scope.authcode
+			};
+
+			$http.post('/auth', data)
+			.success(function (data, status, headers, config) {
+				$scope.isAuthorized = true;
+				if ($scope.focusEditor) {
+					$scope.focusEditor();
+				}
+			}).
+			error(function (data, status, headers, config) {
+				$scope.isAuthorized = false;
+			});
+		};
+
+		$scope.authFocus = function() {
+			isUsingAuthArea = true;
+			updateIsUsingNoteArea();
+		};
+
+		$scope.authBlur = function () {
+			isUsingAuthArea = false;
+			updateIsUsingNoteArea();
+		};
+
 
 		var init = function () {
 			$http.get(getNoteDataLocation())
@@ -129,6 +168,17 @@ angular.module('notes.controllers', []).
 			}).
 			error(function (data, status, headers, config) {
 				console.log(data);
+			});
+
+			$http.get('/permissions')
+			.success(function (data, status, headers, config) {
+				var permissions = data;
+				if (permissions.write) {
+					$scope.isAuthorized = true;
+				}
+				else {
+					$scope.isAuthorized = false;
+				}
 			});
 
 

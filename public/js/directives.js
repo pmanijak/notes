@@ -2,12 +2,32 @@
 
 /* Directives */
 
+// on-focus and on-blur. 
+// borrows a lot from: angular/src/ng/directive/ngEventDirs.js
+var onEventDirectives = {};
+angular.forEach(
+	'Focus Blur'.split(' '),
+	function(name) {
+		var directiveName = 'on' + name;
+		onEventDirectives[directiveName] = ['$parse', function($parse) {
+			return function(scope, element, attr) {
+				var fn = $parse(attr[directiveName]);
+				element.bind(angular.lowercase(name), function(event) {
+					fn(scope, {$event:event});
+				});
+			};
+		}];
+	}
+);
+
 angular.module('notes.directives', []).
 directive('appVersion', function (version) {
 	return function(scope, elm, attrs) {
 		elm.text(version);
 	};
 })
+.directive("onFocus", onEventDirectives["onFocus"])
+.directive("onBlur", onEventDirectives["onBlur"])
 .directive("aceEditor", [
 function () {
 
@@ -129,6 +149,10 @@ function () {
 			editor.resize();
 		};
 
+		$scope.focusEditor = function () {
+			editor.focus();
+		};
+
 		// This is so we can move the cursor after some
 		// content is loaded.
 		var initialized = false;
@@ -161,7 +185,7 @@ function () {
 		};
 
 		// Take the focus / cursor on page load.
-		editor.focus();
+		$scope.focusEditor();
 
 		// Watch our document for changes. When we see some
 		// text has been loaded for the first time, call
