@@ -8,7 +8,8 @@ var express = require('express'),
 	fs = require('fs'),
 	mkdirp = require('mkdirp'),
 	ncp = require('ncp').ncp,
-	uuid = require('node-uuid');
+	uuid = require('node-uuid'),
+	settings = require('./config/settings.js')
 
 var app = module.exports = express();
 
@@ -21,7 +22,7 @@ var rootFilename = 'root';
 var cookieSealant = uuid.v4();
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', settings.port());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -81,7 +82,8 @@ var setPermissionsCookie = function (req, res) {
 };
 
 var isActiveSession = function (sessionId) {
-	// TODO: work in progress
+	// TODO: work in progress. 
+	// all sessions are active! sounds safe!
 	return true;
 };
 
@@ -92,7 +94,7 @@ var permissions = function (req, res, next) {
 	};
 
 	// If there's no authcode set, everyone can write.
-	if (!config.authcode) {
+	if (!settings.authcode()) {
 		req.permissions.write = true;
 		// TODO: Probably clear active sessions, too, 
 		// but maybe that doesn't matter.
@@ -113,11 +115,11 @@ app.post("/auth", function (req, res) {
 	var data = req.body;
 
 	var isAuthorized = function (authcode) {
-		if (!config || !config.authcode) {
+		if (!settings || !settings.authcode()) {
 			return true;
 		}
 
-		return config.authcode === authcode;
+		return settings.authcode() === authcode;
 	};
 
 	if (isAuthorized(data.authcode)) {
