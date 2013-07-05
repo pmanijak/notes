@@ -131,30 +131,58 @@ function () {
 
 		// This is so we can move the cursor after some
 		// content is loaded.
-		$scope.initEditor = function () {
+		var initialized = false;
+		var initEditor = function () {
 			// Move the cursor to the end of the first line,
 			// because it looks better.
-			editor.navigateLineEnd();
+			if (!initialized) {
+				// HACK: I tried for a couple of hours to listen to 
+				// the right chain of events for the cursor to move 
+				// after some text is loaded. This is a hobby project,
+				// and setTimeout makes everything better, so let's
+				// just go with that for now.
+				setTimeout(function() {
+					editor.navigateLineEnd();
+					initialized = true;
+				}, 0);
+			}
 		};
 
 		model.$render = function() {
-		  return session.setValue(model.$modelValue);
+			return session.setValue(model.$modelValue);
 		};
 
-		var updateViewValue = function() {
-		  if (!$scope.$$phase) {
-			return $scope.$apply(function() {
-			  return model.$setViewValue(session.getValue());
-			});
-		  };
+		var updateViewValue = function (e) {
+			if (!$scope.$$phase) {
+				return $scope.$apply(function() {
+					return model.$setViewValue(session.getValue());
+				});
+			};
 		};
 
 		// Take the focus / cursor on page load.
 		editor.focus();
 
+		// Watch our document for changes. When we see some
+		// text has been loaded for the first time, call
+		// our initEditor function.
+		session.getDocument().on("change", function () {
+			var doc = session.getDocument();
+			var lineCount = doc.getLength();
+			if (lineCount === 1) {
+				var firstLine =  doc.getLine(0);
+				if (firstLine.length > 0) {
+					initEditor();
+				}
+			}
+			else {
+				initEditor();
+			}
+		});
+
 		session.on("change", updateViewValue);
 		return $scope.$on("$destroy", function() {
-		  return editor.removeListener("change", updateViewValue);
+			return editor.removeListener("change", updateViewValue);
 		});
 	  }
 	};
