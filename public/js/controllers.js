@@ -30,8 +30,9 @@ angular.module('notes.controllers', []).
 		}
 		else {
 			$scope.base = path + '/';
+			$scope.isAtRoot = false;
 		}
-		
+
 		var getNoteDataLocation = function() {
 			return '/data' + $location.path();
 		};
