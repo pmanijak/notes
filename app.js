@@ -60,31 +60,72 @@ app.configure('production', function () {
 //-----------------------------------------------------------
 // Auth
 //
-var activeSessionIds = {};
+
+// Right now all of our active sessions will be invalidated
+// if we reset the server, and I am ok with that.
+var activeSessions = {};
 var cookieSessionKey = 'insecure-nonsense';
 
-var setPermissionsCookie = function (req, res) {
+var createSessionCookie = function (req, res) {
 	var cookieDomain = req.host === "localhost" ? null : req.host;
 	var oneMinute = 60 * 1000;
 	var oneHour = 60 * oneMinute;
-	var oneYear = 365 * 24 * oneHour;
+	var oneDay = 24 * oneHour;
+	var sixMonths = 182 * oneDay;
+	var oneYear = 365 * oneDay;
 
 	var sessionId = uuid.v4();
 
 	var cookieOptions = {
 		domain: cookieDomain,
-		maxAge: oneHour,
+		maxAge: sixMonths,
 		httpOnly: true,
 		signed: true
+	};
+
+	activeSessions[sessionId] = {
+		created: Date.now(),
+		expires: Date.now() + cookieOptions.maxAge
 	};
 
 	res.cookie(cookieSessionKey, sessionId, cookieOptions);
 };
 
+var updateSessionCookie = function (sessionId, req, res) {
+	var session = activeSessions[sessionId];
+
+	var lastUsedMoreThanOneDayAgo = function (session) {
+		var oneDay = 24 * 60 * 60 * 1000;
+		return ((Date.now() - session.created) > oneDay);
+	}
+
+	// TODO: This may be a premature optimization.
+	// I clearly do not understand the performance costs
+	// of creating a new cookie. Why not make a new
+	// cookie with each request? 
+	// 
+	// The only reason I am doing this is because the idea 
+	// of throwing out a cookie after one bite seems like 
+	// a waste of cookies.
+	//
+	// Also, is rolling-cookie-auth a silly idea? I guess
+	// it prevents old session ids from being used, but
+	// once you have an active session id, you're all set
+	// until the server is restarted.
+	//
+	// In other words, we probably want to have a 
+	// rolling-expiration of two months and a hard
+	// always-expire after something like six months, 
+	// but frankly this is good enough for now.
+	if (session && lastUsedMoreThanOneDayAgo(session)) {
+		createSessionCookie(req, res);
+		// remove the old session.
+		delete activeSessions[sessionId];
+	}
+};
+
 var isActiveSession = function (sessionId) {
-	// TODO: work in progress. 
-	// all sessions are active! sounds safe!
-	return true;
+	return activeSessions[sessionId];
 };
 
 var permissions = function (req, res, next) {
@@ -97,13 +138,20 @@ var permissions = function (req, res, next) {
 	if (!settings.authcode()) {
 		req.permissions.write = true;
 		// TODO: Probably clear active sessions, too, 
-		// but maybe that doesn't matter.
+		// but maybe that doesn't matter since we have
+		// to reset the server anyway to set the authcode,
+		// which in turn invalidates all the cookies.
 	}
 	else {
 		var sessionId = req.signedCookies[cookieSessionKey];
+		// If our cookie has expired, sessionId will be false-y,
+		// though this can be faked, I guess.
 		if (sessionId && isActiveSession(sessionId)) {
-			// TODO: New cookie after the active session has been around for a while.
-			req.permissions.write = true;
+			var session = activeSessions[sessionId];
+			if (session.expires > Date.now()) {
+				req.permissions.write = true;
+				updateSessionCookie(sessionId, req, res);
+			}
 		}
 	}
 
@@ -123,7 +171,7 @@ app.post("/auth", function (req, res) {
 	};
 
 	if (isAuthorized(data.authcode)) {
-		setPermissionsCookie(req, res);
+		createSessionCookie(req, res);
 		res.send(200); // ok. cookie is content.
 	}
 	else {
