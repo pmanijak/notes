@@ -178,7 +178,12 @@ h3 {
 	margin-top: -0.3em;
 }
 .path {
-
+	min-width: 50ex;
+	display: inline-block;
+}
+.path:hover {
+	cursor: pointer;
+	background-color: #f6f6f6;
 }
 .editablePath {
 	display: inline-block;
