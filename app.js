@@ -261,7 +261,6 @@ app.get('/_/notes-at/*', function (req, res) {
 		// Get the names of all the notes (which end with .txt)
 		for (var i=0; i < files.length; i++) {
 			file = files[i];
-			// Directories are skipped.
 			// TODO: Maybe denote something as a directory in some way.
 			if (path.extname(file) === extension) {
 				basename = path.basename(file, extension);
@@ -269,6 +268,7 @@ app.get('/_/notes-at/*', function (req, res) {
 			}
 			else {
 				basename = path.basename(file);
+				isPathValid = true;
 			}
 
 			if (isPathValid && notes.indexOf(basename) < 0) {
