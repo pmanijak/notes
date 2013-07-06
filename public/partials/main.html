@@ -6,7 +6,8 @@
 			<div class="authContainer">
 				<form ng-submit="auth()" ng-hide="isAuthorized">
 					<input type="password" name="auth" placeholder="authcode" 
-						ng-model="authcode" on-focus="authFocus()" on-blur="authBlur()"/>
+						ng-model="authcode" on-focus="authFocus()" on-blur="authBlur()"
+						focus-hook />
 				</form>
 			</div>
 			<div ng-repeat="note in noteList" class="menuItem">

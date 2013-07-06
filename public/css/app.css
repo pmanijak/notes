@@ -165,3 +165,7 @@ h3 {
 	width: 10ex;
 	outline: none;
 }
+.authContainer input:focus {
+	border: solid 1px blue;
+	color: #333;
+}

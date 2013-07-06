@@ -28,6 +28,24 @@ directive('appVersion', function (version) {
 })
 .directive("onFocus", onEventDirectives["onFocus"])
 .directive("onBlur", onEventDirectives["onBlur"])
+.directive("focusHook", [
+function() {
+	// Something to let us hook into the focus call,
+	// so we can call $scope.focus(name) and focus
+	// on the element with name="name"
+	return {
+		restrict: "A",
+		link: function($scope, $el, attrs, model) {
+			var editor, session, updateViewValue;
+		
+			$scope.focus = function (name) {
+				if (attrs['name'] === name) {
+					$el[0].focus();
+				}
+			}
+		}
+	}
+}])
 .directive("aceEditor", [
 function () {
 

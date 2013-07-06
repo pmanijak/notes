@@ -113,6 +113,18 @@ angular.module('notes.controllers', []).
 		};
 
 
+		var focusEditor = function() {
+			if ($scope.focusEditor) {
+				$scope.focusEditor();
+			}
+		};
+
+		var focusAuth = function() {
+			if ($scope.focus) {
+				$scope.focus('auth');
+			}
+		};
+
 		$scope.auth = function () {
 			var data = {
 				authcode: $scope.authcode
@@ -121,9 +133,7 @@ angular.module('notes.controllers', []).
 			$http.post('/auth', data)
 			.success(function (data, status, headers, config) {
 				$scope.isAuthorized = true;
-				if ($scope.focusEditor) {
-					$scope.focusEditor();
-				}
+				focusEditor();
 			}).
 			error(function (data, status, headers, config) {
 				$scope.isAuthorized = false;
@@ -170,14 +180,18 @@ angular.module('notes.controllers', []).
 				console.log(data);
 			});
 
+			// UX: Focus on the text editor if we have permission
+			// to write, otherwise focus on the authcode box.
 			$http.get('/permissions')
 			.success(function (data, status, headers, config) {
 				var permissions = data;
 				if (permissions.write) {
 					$scope.isAuthorized = true;
+					focusEditor();
 				}
 				else {
 					$scope.isAuthorized = false;
+					focusAuth();
 				}
 			});
 
