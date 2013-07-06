@@ -159,7 +159,7 @@ var permissions = function (req, res, next) {
 };
 
 
-app.post("/auth", function (req, res) {
+app.post("/_/auth", function (req, res) {
 	var data = req.body;
 
 	var isAuthorized = function (authcode) {
@@ -179,7 +179,7 @@ app.post("/auth", function (req, res) {
 	}
 });
 
-app.get("/permissions", permissions, function (req, res) {
+app.get("/_/permissions", permissions, function (req, res) {
 	res.send(req.permissions);
 	res.send(200);
 });
@@ -243,7 +243,7 @@ var getPathsInDirectory = function (dirname, callback) {
 	})
 };
 
-app.get('/notes-at/*', function (req, res) {
+app.get('/_/notes-at/*', function (req, res) {
 
 	var notes = [];
 	var basename, file, dirname, isPathValid;
@@ -280,7 +280,7 @@ app.get('/notes-at/*', function (req, res) {
 	});
 });
 
-app.get('/data/*', function (req, res) {
+app.get('/_/data/*', function (req, res) {
 
 	var filepath = getFilePath(req.params);
 	fs.exists(filepath, function (exists) {
@@ -296,7 +296,7 @@ app.get('/data/*', function (req, res) {
 
 
 // Save the note data to the path specified.
-app.put('/data/*', permissions, function (req, res) {
+app.put('/_/data/*', permissions, function (req, res) {
 	if (!req.permissions.write) {
 		res.send(401); // unauthorized
 		return;

@@ -36,11 +36,11 @@ angular.module('notes.controllers', []).
 		}
 
 		var getNoteDataLocation = function() {
-			return '/data' + $location.path();
+			return '/_/data' + $location.path();
 		};
 
 		var getNoteListLocation = function() {
-			return '/notes-at' + $location.path();
+			return '/_/notes-at' + $location.path();
 		};
 
 		var saveNoteData = function () {
@@ -130,7 +130,7 @@ angular.module('notes.controllers', []).
 				authcode: $scope.authcode
 			};
 
-			$http.post('/auth', data)
+			$http.post('/_/auth', data)
 			.success(function (data, status, headers, config) {
 				$scope.isAuthorized = true;
 				focusEditor();
@@ -182,7 +182,7 @@ angular.module('notes.controllers', []).
 
 			// UX: Focus on the text editor if we have permission
 			// to write, otherwise focus on the authcode box.
-			$http.get('/permissions')
+			$http.get('/_/permissions')
 			.success(function (data, status, headers, config) {
 				var permissions = data;
 				if (permissions.write) {
