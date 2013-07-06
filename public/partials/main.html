@@ -28,7 +28,7 @@
 			</span>
 			<div class="editablePath" ng-show="isEditingPath">
 				<form ng-submit="editablePathSubmit()">
-					<input focus-hook="setNewPathFocus" 
+					<input focus-hook="setNewPathFocus" on-blur="cancelNewPath()"
 					ng-model="newPath" type="text" name="newPath" />
 				</form>
 			</div>

@@ -141,6 +141,7 @@ angular.module('notes.controllers', []).
 
 		$scope.authBlur = function () {
 			isUsingAuthArea = false;
+			$scope.setAuthFocus = false;
 			updateIsUsingNoteArea();
 		};
 
@@ -150,10 +151,18 @@ angular.module('notes.controllers', []).
 			$scope.setNewPathFocus = true;
 		};
 
-
 		$scope.editablePathSubmit = function () {
 			$scope.isEditingPath = false;
+			$scope.setNewPathFocus = false;
 			$location.path($scope.newPath);
+		};
+
+		$scope.cancelNewPath = function () {
+			console.log('ok');
+			$scope.$apply(function() {
+				$scope.isEditingPath = false;
+				$scope.setNewPathFocus = false;
+			});
 		};
 
 
