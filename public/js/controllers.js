@@ -119,13 +119,7 @@ angular.module('notes.controllers', []).
 			}
 		};
 
-		var focusAuth = function() {
-			if ($scope.focus) {
-				$scope.focus('auth');
-			}
-		};
-
-		$scope.auth = function () {
+		$scope.authSubmit = function () {
 			var data = {
 				authcode: $scope.authcode
 			};
@@ -148,6 +142,18 @@ angular.module('notes.controllers', []).
 		$scope.authBlur = function () {
 			isUsingAuthArea = false;
 			updateIsUsingNoteArea();
+		};
+
+		$scope.pathClicked = function () {
+			$scope.newPath = $scope.path;
+			$scope.isEditingPath = true;
+			$scope.setNewPathFocus = true;
+		};
+
+
+		$scope.editablePathSubmit = function () {
+			$scope.isEditingPath = false;
+			$location.path($scope.newPath);
 		};
 
 
@@ -191,7 +197,7 @@ angular.module('notes.controllers', []).
 				}
 				else {
 					$scope.isAuthorized = false;
-					focusAuth();
+					$scope.setAuthFocus = true;
 				}
 			});
 

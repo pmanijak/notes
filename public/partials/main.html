@@ -4,10 +4,10 @@
 				id="home-icon" src="/img/home.png" 
 				width='16' height='16'/></a></div>
 			<div class="authContainer">
-				<form ng-submit="auth()" ng-hide="isAuthorized">
+				<form ng-submit="authSubmit()" ng-hide="isAuthorized">
 					<input type="password" name="auth" placeholder="authcode" 
 						ng-model="authcode" on-focus="authFocus()" on-blur="authBlur()"
-						focus-hook />
+						focus-hook="setAuthFocus" />
 				</form>
 			</div>
 			<div ng-repeat="note in noteList" class="menuItem">
@@ -22,7 +22,17 @@
 	</div>
 
 	<div class="noteContainer">
-		<h3>notes <strong>{{path}}</strong></h3>
+		<h3 class="notesHeading">notes 
+			<span class="path" ng-click="pathClicked()" ng-hide="isEditingPath">
+				<strong>{{path}}</strong>
+			</span>
+			<div class="editablePath" ng-show="isEditingPath">
+				<form ng-submit="editablePathSubmit()">
+					<input focus-hook="setNewPathFocus" 
+					ng-model="newPath" type="text" name="newPath" />
+				</form>
+			</div>
+		</h3>
 		<div class="noteArea" 
 			ng-mouseenter="mouseEnterNoteArea()"
 			ng-mouseleave="mouseLeaveNoteArea()">
