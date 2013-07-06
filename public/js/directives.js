@@ -101,24 +101,24 @@ function () {
 		exports.NotesHighlightRules = NotesHighlightRules;
 	});
 
-	var Editor, Renderer;
-	Editor = ace.require("ace/editor").Editor;
-	Renderer = ace.require("ace/virtual_renderer").VirtualRenderer;
 	return {
 	  restrict: "EA",
 	  require: "ngModel",
 	  replace: true,
-	  template: "<div class=\"ace-container\"></div>",
+	  template: "<div id=\"notes-ace-editor\" class=\"ace-container\"></div>",
 
-	  // TODO: The height of the ace-container doesn't change
-	  // when the window is resized. This would be nice to fix.
 	  link: function($scope, $el, attrs, model) {
 		var editor, session, updateViewValue;
 		
-		editor = new Editor(new Renderer($el[0], "ace/theme/textmate"));
+		editor = ace.edit("notes-ace-editor");
+		// We instantiate with ace.edit instead of the Editor object
+		// because for some reason that causes undo and redo to stop working.
+		// editor = new Editor(new Renderer($el[0], "ace/theme/textmate"));
+
 		editor.setHighlightActiveLine(false);
 
 		var renderer = editor.renderer;
+		renderer.setTheme("ace/theme/textmate");
 		renderer.setShowGutter(false);
 		renderer.setShowPrintMargin(false);
 
