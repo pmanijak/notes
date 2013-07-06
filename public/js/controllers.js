@@ -15,6 +15,7 @@ angular.module('notes.controllers', []).
 		$scope.isThereUnsavedData = false;
 		$scope.isSaving = false;
 		$scope.isUsingNoteArea = false;
+		$scope.isAuthorized = true;
 
 		var isMouseOverNoteArea, isUsingAuthArea = false;
 		

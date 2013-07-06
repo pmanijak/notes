@@ -3,8 +3,8 @@
 			<div id="homeItem"><a href="/"><img 
 				id="home-icon" src="/img/home.png" 
 				width='16' height='16'/></a></div>
-			<div class="authContainer">
-				<form ng-submit="authSubmit()" ng-show="!isAuthorized">
+			<div class="authContainer" ng-class="{ show: !isAuthorized }">
+				<form ng-submit="authSubmit()">
 					<input type="password" name="auth" placeholder="authcode" 
 						ng-model="authcode" on-focus="authFocus()" on-blur="authBlur()"
 						focus-hook="setAuthFocus" />
