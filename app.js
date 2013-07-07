@@ -26,15 +26,14 @@ var rootFilename = 'root';
 var cookieSecret = function() {
 	var secret;
 	var cookieSecretPath = path.join(statedir, 'cookieSecret');
-	var utf8 = {encoding: 'utf8'};
 	var wasCookieCreated = false;
 
 	if (fs.existsSync(cookieSecretPath)) {
-		secret = fs.readFileSync(cookieSecretPath, utf8);
+		secret = fs.readFileSync(cookieSecretPath).toString();
 	}
 	else {
 		secret = uuid.v4();
-		fs.writeFileSync(cookieSecretPath, secret, utf8);
+		fs.writeFileSync(cookieSecretPath, secret);
 		wasCookieCreated = true;
 	}
 
