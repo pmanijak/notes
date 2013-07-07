@@ -1,8 +1,8 @@
 //----------------------------------------------------
 // settings.js
 //
-var port = process.env.PORT || 3000;
 var authcode = process.env.AUTHCODE || "";
+var port = process.env.PORT || 3000;
 
 // Use an overrides file so we can have something
 // for local testing that is otherwise ignored

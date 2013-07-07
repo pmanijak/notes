@@ -9,17 +9,41 @@ var express = require('express'),
 	mkdirp = require('mkdirp'),
 	ncp = require('ncp').ncp,
 	uuid = require('node-uuid'),
-	settings = require('./config/settings.js')
+	settings = require('./config/settings.js');
+
 
 var app = module.exports = express();
 
 var datadir = path.join(__dirname, 'data');
+var statedir = path.join(__dirname, 'state');
+mkdirp.sync(statedir);
+
 var extension = '.txt';
 var rootFilename = 'root';
-// TODO: This creates a well-sealed cookie, but all 
-// cookies become invalid upon server restart. So,
-// is that a big deal? What do you think?
-var cookieSealant = uuid.v4();
+
+// Windows: iisnode restarts all the time, so we'll want 
+// a cookie secret that doesn't change from instance to instance.
+var cookieSecret = function() {
+	var secret;
+	var cookieSecretPath = path.join(statedir, 'cookieSecret');
+	var utf8 = {encoding: 'utf8'};
+	var wasCookieCreated = false;
+
+	if (fs.existsSync(cookieSecretPath)) {
+		secret = fs.readFileSync(cookieSecretPath, utf8);
+	}
+	else {
+		secret = uuid.v4();
+		fs.writeFileSync(cookieSecretPath, secret, utf8);
+		wasCookieCreated = true;
+	}
+
+	return {
+		wasCreated: wasCookieCreated,
+		data: secret
+	}
+}(); // closure
+
 
 // all environments
 app.set('port', settings.port());
@@ -28,7 +52,7 @@ app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
-app.use(express.cookieParser(cookieSealant));
+app.use(express.cookieParser(cookieSecret.data));
 app.use(express.methodOverride());
 app.use(app.router);
 
@@ -60,10 +84,62 @@ app.configure('production', function () {
 //-----------------------------------------------------------
 // Auth
 //
+var activeSessions = function () {
 
-// Right now all of our active sessions will be invalidated
-// if we reset the server, and I am ok with that.
-var activeSessions = {};
+	var sessions = {};
+	var sessionsPath = path.join(statedir, 'sessions.json');
+
+	// We assume that there is only one instance of Node running
+	// at a time. If that's true, we don't have to worry about 
+	// multiple threads writing to the sessions file at once.
+	var saveSessions = function () {
+		fs.writeFileSync(sessionsPath, JSON.stringify(sessions))
+	};
+
+	var getSavedSessions = function () {
+		var noSessions = {};
+
+		if (fs.existsSync(sessionsPath)) {
+			return JSON.parse(fs.readFileSync(sessionsPath));
+		}
+		else {
+			return noSessions;
+		}
+	};
+
+	var getSession = function (sessionId) {
+		return sessions[sessionId];
+	};
+
+	var setSession = function (sessionId, session) {
+		sessions[sessionId] = session;
+		saveSessions();
+	};
+
+	var deleteSession = function (sessionId) {
+		delete sessions[sessionId];
+		saveSessions();
+	};
+
+	// Load our active sessions from disk on startup.
+	// If a new cookie secret was created, that means
+	// that all of our old sessions are invalid.
+	if (cookieSecret.wasCreated) {
+		sessions = {};
+		saveSessions();
+	}
+	else {
+		sessions = getSavedSessions();
+	}
+
+	return {
+		get: getSession,
+		set: setSession,
+		'delete': deleteSession
+	};
+}(); // closure
+
+
 var cookieSessionKey = 'insecure-nonsense';
 
 var createSessionCookie = function (req, res) {
@@ -83,16 +159,17 @@ var createSessionCookie = function (req, res) {
 		signed: true
 	};
 
-	activeSessions[sessionId] = {
+	var session = {
 		created: Date.now(),
 		expires: Date.now() + cookieOptions.maxAge
 	};
 
+	activeSessions.set(sessionId, session);
 	res.cookie(cookieSessionKey, sessionId, cookieOptions);
 };
 
 var updateSessionCookie = function (sessionId, req, res) {
-	var session = activeSessions[sessionId];
+	var session = activeSessions.get(sessionId);
 
 	var lastUsedMoreThanOneDayAgo = function (session) {
 		var oneDay = 24 * 60 * 60 * 1000;
@@ -120,12 +197,12 @@ var updateSessionCookie = function (sessionId, req, res) {
 	if (session && lastUsedMoreThanOneDayAgo(session)) {
 		createSessionCookie(req, res);
 		// remove the old session.
-		delete activeSessions[sessionId];
+		activeSessions.delete(sessionId);
 	}
 };
 
 var isActiveSession = function (sessionId) {
-	return activeSessions[sessionId];
+	return activeSessions.get(sessionId);
 };
 
 var permissions = function (req, res, next) {
@@ -147,7 +224,7 @@ var permissions = function (req, res, next) {
 		// If our cookie has expired, sessionId will be false-y,
 		// though this can be faked, I guess.
 		if (sessionId && isActiveSession(sessionId)) {
-			var session = activeSessions[sessionId];
+			var session = activeSessions.get(sessionId);
 			if (session.expires > Date.now()) {
 				req.permissions.write = true;
 				updateSessionCookie(sessionId, req, res);
@@ -397,7 +474,6 @@ app.put('/_/data/*', permissions, function (req, res) {
 // The secret to bridging Angular and Express in a 
 // way that allows us to pass any path to the client.
 app.get('*', routes.index);
-
 
 /**
  * Start Server

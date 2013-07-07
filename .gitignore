@@ -1,5 +1,6 @@
 node_modules
 data/*
+state/*
 lib-cov
 *.seed
 *.log
