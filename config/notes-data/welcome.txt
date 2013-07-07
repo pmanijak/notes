@@ -1,12 +1,16 @@
-/welcome to notes.
+Welcome to notes.
 
-To create a note, go to something like this:
-    http://notes.jit.su/projects
-    or http://notes.jit.su/projects/cooking
- 
-To link to a note, /projects or /someday
- 
-Notes are public, and anyone can edit them. 
-Notes are saved automatically, as you type.
+* Notes are saved automatically
+* Notes are created when you visit a new page like /projects 
+* Notes are deleted when you delete all the text in them
 
-Source: http://github.com/exclsr/notes
+* Link to notes like /projects or /someday 
+* Link to websites like http://github.com/exclsr 
+
+* Security is off by default
+* Turn it on by setting the AUTHCODE env variable
+
+* Notes are public
+
+--
+Notes came from http://github.com/exclsr/notes 
