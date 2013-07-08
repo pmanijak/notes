@@ -204,6 +204,10 @@ var isActiveSession = function (sessionId) {
 	return activeSessions.get(sessionId);
 };
 
+var getSessionId = function (req) {
+	return req.signedCookies[cookieSessionKey];
+};
+
 var permissions = function (req, res, next) {
 	req.permissions = {
 		read: true,
@@ -219,7 +223,7 @@ var permissions = function (req, res, next) {
 		// which in turn invalidates all the cookies.
 	}
 	else {
-		var sessionId = req.signedCookies[cookieSessionKey];
+		var sessionId = getSessionId(req);
 		// If our cookie has expired, sessionId will be false-y,
 		// though this can be faked, I guess.
 		if (sessionId && isActiveSession(sessionId)) {
@@ -257,6 +261,12 @@ app.post("/_/auth", function (req, res) {
 
 app.get("/_/permissions", permissions, function (req, res) {
 	res.send(req.permissions);
+	res.send(200);
+});
+
+app.get("/_/signout", function (req, res) {
+	var sessionId = getSessionId(req);
+	activeSessions.delete(sessionId);
 	res.send(200);
 });
 
