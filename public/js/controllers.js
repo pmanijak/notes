@@ -136,6 +136,7 @@ angular.module('notes.controllers', []).
 			var data = {
 				authcode: $scope.authcode
 			};
+			$scope.authcode = "";
 
 			$http.post('/_/auth', data)
 			.success(function (data, status, headers, config) {
@@ -183,6 +184,29 @@ angular.module('notes.controllers', []).
 			});
 		};
 
+		var updatePermissions = function () {
+			// UX: Focus on the text editor if we have permission
+			// to write, otherwise focus on the authcode box.
+			$http.get('/_/permissions')
+			.success(function (data, status, headers, config) {
+				var permissions = data;
+				if (permissions.write) {
+					$scope.isAuthorized = true;
+					focusEditor();
+				}
+				else {
+					$scope.isAuthorized = false;
+					$scope.setAuthFocus = true;
+				}
+			});
+		};
+
+		$scope.signout = function () {
+			$http.get("/_/signout")
+			.success(function (data, status, headers, config) {
+				updatePermissions(); // Refresh.
+			})
+		};
 
 		var init = function () {
 			$http.get(getNoteDataLocation())
@@ -213,21 +237,7 @@ angular.module('notes.controllers', []).
 				console.log(data);
 			});
 
-			// UX: Focus on the text editor if we have permission
-			// to write, otherwise focus on the authcode box.
-			$http.get('/_/permissions')
-			.success(function (data, status, headers, config) {
-				var permissions = data;
-				if (permissions.write) {
-					$scope.isAuthorized = true;
-					focusEditor();
-				}
-				else {
-					$scope.isAuthorized = false;
-					$scope.setAuthFocus = true;
-				}
-			});
-
+			updatePermissions();
 
 			$scope.$watch('noteData', function (val, oldval) {
 				if (oldval) {

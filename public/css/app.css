@@ -55,19 +55,20 @@ body {
 	margin-top: 3px;
 }
 
-.menuItem {
+.menuItem, .signout {
 	font-family: Helvetica, Verdana;
 	font-size: 10pt;
 }
-.menuItem a {
+.menuItem a, .signout a {
 	color: #aaa;
 	text-decoration: none;
 }
-.menuItem a:hover {
+.menuItem a:hover, .signout a:hover {
 	color: #444;
 	text-decoration: underline;
+	cursor: pointer;
 }
-.menuItemLink {
+.menuItemLink, .signout a {
 	padding: 2px;
 }
 .menuItemLink:hover {
@@ -202,4 +203,8 @@ h3 {
 .editablePath input {
 	width: 50ex;
 	outline: none;
+}
+
+.signout {
+	text-align: right;
 }
