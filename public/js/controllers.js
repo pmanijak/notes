@@ -16,6 +16,7 @@ angular.module('notes.controllers', []).
 		$scope.isSaving = false;
 		$scope.isUsingNoteArea = false;
 		$scope.isAuthorized = true;
+		$scope.isUnauthorized = false;
 
 		var isMouseOverNoteArea, isUsingAuthArea = false;
 		
@@ -64,10 +65,16 @@ angular.module('notes.controllers', []).
 				.success(function (data, status, headers, config) {
 					console.log(data);
 					$scope.isSaving = false;
+					$scope.isUnauthorized = false;
 				}).
 				error(function (data, status, headers, config) {
-					console.log(data);
 					$scope.isSaving = false;
+					if (status === 401) {
+						$scope.isUnauthorized = true;
+					}
+					else {
+						console.log(data);
+					}
 				});
 			}
 		};
@@ -98,10 +105,15 @@ angular.module('notes.controllers', []).
 			}
 		};
 
-
 		var updateIsUsingNoteArea = function () {
-			$scope.isUsingNoteArea = !isUsingAuthArea && isMouseOverNoteArea;
+			$scope.isUsingNoteArea = !isUsingAuthArea 
+				&& isMouseOverNoteArea 
+				&& !$scope.isUnauthorized;
 		}
+
+		$scope.$watch('isUnauthorized', function() {
+			updateIsUsingNoteArea();
+		});
 
 		$scope.mouseEnterNoteArea = function() {
 			isMouseOverNoteArea = true;
@@ -128,10 +140,15 @@ angular.module('notes.controllers', []).
 			$http.post('/_/auth', data)
 			.success(function (data, status, headers, config) {
 				$scope.isAuthorized = true;
+				$scope.isUnauthorized = false;
+				// Account for the situation where we've typed something
+				// in, been denied, and then sign in.
+				$scope.isThereUnsavedData = true;
 				focusEditor();
 			}).
 			error(function (data, status, headers, config) {
 				$scope.isAuthorized = false;
+				$scope.isUnauthorized = true;
 			});
 		};
 

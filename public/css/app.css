@@ -176,6 +176,10 @@ h3 {
 	border: solid 1px blue;
 	color: #333;
 }
+.authContainer.notSaving input {
+	border: solid 1px red;
+}
+
 
 .notesHeading {
 	/* Prevents things from realigning when
