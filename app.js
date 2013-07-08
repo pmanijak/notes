@@ -128,7 +128,18 @@ var activeSessions = function () {
 		saveSessions();
 	}
 	else {
-		sessions = getSavedSessions();
+		sessions = {};
+		
+		var savedSessions = getSavedSessions();
+		// Only keep the sessions that haven't expired.
+		var now = Date.now();
+		for (var sessionId in savedSessions) {
+			if (now < savedSessions[sessionId].expires) {
+				sessions[sessionId] = savedSessions[sessionId];
+			}
+		}
+
+		saveSessions();
 	}
 
 	return {
