@@ -41,6 +41,9 @@
 		</div>
 		<div ng-show="isThereUnsavedData || isSaving">...</div>
 	</div>
-	<div class="signout" ng-class="{ hidden: isUsingNoteArea || !isAuthorized }">
+	<div class="signout" 
+		ng-class="{ 
+			hidden: isUsingNoteArea || (isAuthRequired && !isAuthorized) || !isAuthRequired
+		}">
 		<a ng-click="signout()">sign out</a>
 	</div>

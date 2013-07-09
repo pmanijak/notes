@@ -270,6 +270,15 @@ app.post("/_/auth", function (req, res) {
 	}
 });
 
+app.get("/_/auth-required", function (req, res) {
+	if (settings.authcode()) {
+		res.send(true);
+	}
+	else {
+		res.send(false);
+	}
+});
+
 app.get("/_/permissions", permissions, function (req, res) {
 	res.send(req.permissions);
 	res.send(200);

@@ -16,6 +16,7 @@ angular.module('notes.controllers', []).
 		$scope.isSaving = false;
 		$scope.isUsingNoteArea = false;
 		$scope.isAuthorized = true;
+		$scope.isAuthRequired = false;
 		$scope.isUnauthorized = false;
 
 		var isMouseOverNoteArea, isUsingAuthArea = false;
@@ -235,6 +236,16 @@ angular.module('notes.controllers', []).
 			}).
 			error(function (data, status, headers, config) {
 				console.log(data);
+			});
+
+			$http.get('/_/auth-required')
+			.success(function (data, status, headers, config) {
+				if (data === "true") {
+					$scope.isAuthRequired = true;
+				}
+				else {
+					$scope.isAuthRequired = false;
+				}
 			});
 
 			updatePermissions();
