@@ -9,6 +9,10 @@ how?
 
 	http://server:3000
 
+why?
+----------
+I wanted a simple app to sync notes between computers, without the distractions of Google Docs, and without installing software beyond Node.js on my server.
+
 what?
 ----------
 * Notes are in plain text.
@@ -33,6 +37,14 @@ roadmap
 * Notes might be polished from time to time.
 * Notes components might be reused in other projects.
 * Forking and creating your own, personalized Notes is encouraged.
+
+decisions
+----------
+* No history. Only the present note is important. Use backups to prevent data loss.
+* Realtime syncing is not a priority. This was not created with collaborative notes in mind.
+* Cookies are used for maintaining active sessions with the server, expiring after 6 months.
+* Decisions were made with the idea of only one person using the notes in mind.
+* Notes are public, because this isn't meant to be used on anything so important that it must remain secret.
 
 acknowledgements
 -----------------
